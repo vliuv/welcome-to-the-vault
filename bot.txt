@@ -1,0 +1,260 @@
+! version = 2.0
+
+! sub i'm     = i am
+! sub i'd     = i would
+! sub i've    = i have
+! sub i'll    = i will
+! sub don't   = do not
+! sub isn't   = is not
+! sub you'd   = you would
+! sub you're  = you are
+! sub you've  = you have
+! sub you'll  = you will
+! sub what's  = what is
+! sub whats   = what is
+! sub what're = what are
+! sub what've = what have
+! sub what'll = what will
+! sub who's   = who is
+
++ (hi|hello|hey)
+- <set paper=0><set locker=0><set safe=0><set pictureframe=0><set safepicture=0><set tiles=0><set counter=0>Hi there! I'm Vaultroid, what's your name?
+
++ [my name is | i am] *
+% hi there i am vaultroid what is your name
+- <set username=<formal>>Nice to meet you. I'm the AI assistant that will help you solve the series of puzzles to unlock the vault. There are four different rooms that we will have to get through, the final one holds the vault. We have just entered the first room. There's the door that we have to get through, but it has a lock on it. There's also a desk to your left and a chest to the right. What should we look at first?{topic=1a}
+
+>topic 1a
++ [*] door [*]
+- The door is locked, it seems we need a key... should we look at the desk or the chest instead?
+
++ [*] desk [*]
+- There is a piece of paper on top of the desk and the desk also has a drawer, what should we take a look at first?
+
++ [*] paper [*]
+* <get paper> == 0 => <add paper=1>The piece of paper has a number puzzle written on it. Let's keep that for later. What should we look at next?
+* <get paper> >= 1 => We have already taken the paper. What should we look at next?
+
++ [*] drawer [*]
+- There is nothing in the drawer. What should we look at next?
+
++ [*] chest [*]
+* <get paper> == 0 => It looks like there is a combination lock on it with four numbers, let's come back to it later. Where should we look next?
+* <get paper> >= 1 => It looks like there is a combination lock on it with four numbers, should we try a combination, yes or no?
+
++ [*] (yes|ok) [*]
+% it looks like there is a combination lock on it with four numbers should we try a combination yes or no
+- Ok, what combination do you have? Make sure to just tell me all four numbers with no spaces, commas, etc.{topic=1chest}
+
++ [*] no [*]
+% it looks like there is a combination lock on it with four numbers should we try a combination yes or no
+- Ok, let's come back to this later. What should we look at instead?
+
++ * 
+- I don't think we can do that, maybe let's check out the door, desk, or chest.
+- I'm not sure I understand, try asking to look at the door, desk, or chest.
+- We can only look at the door, desk, or chest.
+
+<topic
+
+>topic 1chest
++ 9438
+- Looks like that worked! There are three keys in the chest. Let's take them with us, they might come in handy. I think we've gotten everything we need to get past this room. Should we take a look at the door again, yes or no?{topic=1b}
+
++ *
+- Hmm. I don't think that's it, let's try again.
+- Maybe take a look at the puzzle on the paper again.
+- I think the green means right number & position and the yellow means right number but wrong position.
+- It didn't work, but that's okay, we can try again.
+- Make sure you just tell me the four numbers with no spaces, commas, etc.
+- The green means the right number & position.
+- The yellow means right number wrong position.
+
+<topic
+
+>topic 1b
++ [*] (yes|ok) [*]
+- Good choice. We have three keys, a red one, a green one, and a blue one. I think only one will open the door. Which key should we try?
+
++ [*] red [*]
+- It looks like the red one doesn't work, what color key should we try next?
+
++ [*] green [*]
+- The green doesn't seem to fit in the keyhole, what color key should we try next?
+
++ [*] blue [*]
+- Blue is the perfect fit! The first door has been opened. It seems like we will have to find our way through the second room now. There is a locker in the middle, a lamp, and the door that we will have to get through. What should we look at first?{topic=2a}
+
++ [*] no [*]
+- I really think we should try a key, what color should we try?
+
++ *
+- Please let me know which color key to try, red, green, or blue?
+- Should we try the red, green, or blue key?
+
+<topic
+
+>topic 2a
++ [*] locker [*]
+* <get locker> == 0 => <add locker=1>It looks like this locker can be opened with a key, we have the red and the green one left, which one should we try?{topic=2locker}
+* <get locker> >= 1 => We have already opened the locker. What should we look at next?
+
++ [*] lamp [*]
+- I think this is just a lamp, nothing to see here. What should we look at next?
+
++ [*] door [*]
+* <get locker> == 0 => This door requires a five letter word passcode, let's come back to it later. What should we look at next?
+* <get locker> >= 1 => This door requires a five letter word passcode, should we try to unlock it, yes or no?
+
++ [*] (yes|ok) [*]
+% this door requires a five letter word passcode should we try to unlock it yes or no
+- Great! Send me the five letter word passcode, make sure you just send the passcode and nothing else.{topic=2b}
+
++ [*] no [*]
+% this door requires a five letter word passcode should we try to unlock it yes or no
+- Ok, we can come back to this later, what should we look at instead?
+
++ *
+- I don't think we can do that, maybe let's check out the door, the locker, or the lamp.
+- I'm not sure I understand, try asking to look at the door, the locker, or the lamp.
+- We can only look at the door, the locker, or the lamp.
+
+<topic
+
+>topic 2locker
++ [*] red [*]
+- The red one worked! The locker seems to have a card with a word puzzle on it, let's keep that for later. What should we look at next?{topic=2a}
+
++ [*] green [*]
+- The green one doesn't seem to work, what color key should we try next? (hint: there's only one other left)
+
++ *
+- Should we try the red or the green key?
+- Please tell me which key, the red or green?
+
+<topic
+
+>topic 2b
++ sense
+- That worked! It looks like we've entered the third room. There is a safe in the corner, a picture frame on the wall, and of course, the locked door. What should we examine first?{topic=3a}
+
++ *
+- Hmm. I don't think that's it, let's try again.
+- Maybe take a look at the puzzle on the card again.
+- I think each blank in the word corresponds to a letter in the five letter passcode in order.
+- It didn't work, but that's okay, we can try again.
+- Make sure you just tell me the five letter passcode and nothing else.
+- Try filling in the blank spaces of the words.
+- Each blank is a letter in the five letter passcode.
+
+<topic
+
+>topic 3a
++ [*] safe [*]
+* <get safe> == 0 => This safe needs a key. We have one key left, the green key, should we try it, yes or no?{topic=3safe}
+* <get safe> == 1 => You have already opened the safe. What should we look at instead?
+
++ [*] (picture|picture frame|frame) [*]
+* <get pictureframe> == 0 => <add pictureframe = 1><add safepicture = 1>I think this abstract looking map is a clue. I will take a picture of this for later, just in case. What should we look at now?
+* <get pictureframe> >= 1 => We have already saved a photo of the picture frame. What should we look at next?
+
++ [*] door [*]
+* <get safepicture> <= 1 => This door has a keypad with buttons for up, down, left, and right. It looks like we need a combination of four directions to open it. Let's come back later, should we check out the the safe or the picture frame?
+* <get safepicture> >= 2 => This door has a keypad with buttons for up, down, left, and right. It looks like we need a combination of four directions to open it. Should we try a combination, yes or no?
+
++ [*] (yes|ok) [*]
+% this door has a keypad with buttons for up down left and right it looks like we need a combination of four directions to open it should we try a combination yes or no
+- Please tell me just the four directions each separated by a space (e.g. 'left left right down').{topic=3b}
+
++ [*] no [*]
+- That's ok, we can come back later, what should we look at instead?
+
++ *
+- I don't think we can do that, maybe let's check out the safe, picture frame, or door.
+- I'm not sure I understand, try asking to look at the safe, picture frame, or door.
+- We can only look at the safe, picture frame, or door.
+
+<topic
+
+>topic 3safe
++ [*] (yes|ok) [*]
+- <add safe=1><add safepicture=1>The green key opened the safe! It looks like there is a small piece of paper with writing on it inside the safe. Let's save this for later. Should we look at the picture frame or the door next?{topic=3a}
+
++ [*] no [*]
+- I really think we should try the green key, it's the only one left! Please say yes.
+
++ * 
+- I think we should try the green key, just say yes.
+
+<topic
+
+>topic 3b
++ up right up left
+- It worked! We've opened the door, and we've made it to the fourth and last room! It looks like there's just the vault and an interesting pattern on the tiles. Which should we look at first?{topic=4a}
+
++ *
+- That combination doesn't seem to work. Let's try again.
+- I think that's the wrong combination, we need one with four directions.
+- I think that the picture frame is kind of like a maze of directions.
+- I think the paper is sort of a key for the image in the picture frame.
+- Hmm. The combination isn't correct, let's take a look at the clues in our inventory and try again.
+- That didn't work, the combination has to be all four directions each separated with a space (e.g. 'left right up down')
+- Try using the directions from one spot to another in the picture frame.
+
+<topic
+
+>topic 4a
++ [*] vault [*]
+* <get tiles> == 0 => It looks like the vault is protected by two layers of security, the first requires a three digit passcode and the second requires a three color passcode. Let's come back to it later. What should we look at instead?
+* <get tiles> >= 1 => It looks like the vault is protected by two layers of security, the first requires a three digit passcode and the second requires a three color passcode. Should we finally attempt to unlock the vault, yes or no?
+
++ [*] (tiles|pattern|tile) [*]
+* <get tiles> == 0 => <add tiles = 1>These tiles look like a puzzle. I will take a picture of it for us to examine it more closely. What should we look at next?
+* <get tiles> >= 1 => We have already taken a picture of the tiles. What should we look at next?
+
++ [*] (yes|ok) [*]
+% it looks like the vault is protected by two layers of security the first requires a three digit passcode and the second requires a three color passcode should we finally attempt to unlock the vault yes or no
+- Ok, first tell me the three number passcode, make sure to just send me the three numbers with no spaces, commas, etc.{topic=4b}
+
++ [*] no [*]
+% it looks like the vault is protected by two layers of security the first requires a three digit passcode and the second requires a three color passcode should we finally attempt to unlock the vault yes or no
+- Ok, we can come back to this later what should we look at instead?
+
++ *
+- I don't think we can do that, maybe let's check out the vault or the tiles.
+- I'm not sure I understand, try asking to look at the vault or the tiles.
+- We can only look at the vault or the tiles.
+
+<topic
+
+>topic 4b
++ 264
+- It worked! Now we just have one more step to open the vault. This time we need to press these three buttons in order to make a three color passcode. There is a red button, a green button, and a blue button. These colors seem pretty familiar... Make sure to tell me just the three colors in order, each separated by a space (e.g. 'red green blue'). Please be careful though, we only have 3 tries to get it right, otherwise the whole place will blow...{topic=4c}
+
++ *
+- That combination doesn't seem to work. Let's try again.
+- I think that's the wrong combination, we need one with just three numbers.
+- I think each square tile corresponds to a different number from 1-9.
+- I think that the patterned tiles each correspond to a different digit place (1-3) in the three digit passcode.
+- Hmm. The combination isn't correct, let's take a look at the photo of the tiles and try again.
+- That didn't work, make sure you are just sending me the three numbers with no spaces, commas, etc.
+- There's no math involved, trust me.
+- The location of each patterned tile corresponds to a number in the three digit passcode.
+
+<topic
+
+>topic 4c
++ blue red green
+* <get counter> == 0 => Nice job! You managed to get it in one try!{topic=random}
+* <get counter> == 1 => Wow! That could have ended badly, but you got it!{topic=random}
+* <get counter> == 2 => Phew! That was a very close call...{topic=random}
+
++ * 
+* <get counter> == 0 => <add counter=1>That's 1 wrong, 2 tries left. Think about the colors... they seem to match the keys we used today. Also, make sure you are just sending me the three colors in order, each separated by a space (e.g. 'red green blue').
+* <get counter> == 1 => <add counter=1>That's 2 wrong, 1 try left. This could be it. Please think really hard about the order we used the keys... Also, make sure you are just sending me the three colors in order, each separated by a space (e.g. 'red green blue').
+* <get counter> == 2 => <add counter=1>That's three wrong. Uh oh...{topic=random}
+
+<topic
+
++ *
+- Hello?
